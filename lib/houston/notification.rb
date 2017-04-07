@@ -1,4 +1,5 @@
 require 'json'
+require 'multi_json'
 
 module Houston
   class Notification
@@ -88,7 +89,7 @@ module Houston
     end
 
     def valid?
-      JSON(payload).bytesize <= MAXIMUM_PAYLOAD_SIZE
+      parse_json(payload).bytesize <= MAXIMUM_PAYLOAD_SIZE
     end
 
     def error
@@ -96,13 +97,16 @@ module Houston
     end
 
     private
-
+      def parse_json payload
+        defined?(ActiveSupport::JSON) ? MultiJson.dump(payload) : payload.to_json
+      end
+      
       def device_token_item
         [1, 32, @token.gsub(/[<\s>]/, '')].pack('cnH64')
       end
 
       def payload_item
-        json = payload.to_json
+        json = parse_json(payload)
         [2, json.bytes.count, json].pack('cna*')
       end
 

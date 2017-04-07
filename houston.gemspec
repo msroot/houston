@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'commander', '~> 4.4'
   s.add_dependency 'json'
+  s.add_dependency 'multi_json'
 
   s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'rake'
